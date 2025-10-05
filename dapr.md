@@ -196,14 +196,14 @@ spec:
     metadata:
       annotations:  
         dapr.io/app-id: pizza-store
-        dapr.io/app-port: \"8080\"
-        dapr.io/enabled: \"true\"
-        dapr.io/log-level: \"debug\"
+        dapr.io/app-port: "8080"
+        dapr.io/enabled: "true"
+        dapr.io/log-level: "debug"
       labels:
         app: pizza-store-service
         app.kubernetes.io/name: pizza-store-service
         app.kubernetes.io/part-of: pizza-store-service
-        app.kubernetes.io/version: 0.1.1
+        app.kubernetes.io/version: 0.1.0
     spec:
       containers:
       - name: pizza-store-service
@@ -211,19 +211,19 @@ spec:
         imagePullPolicy: Always
         env:
         - name: SERVER_PORT
-          value: \"8080\"
+          value: "8080"
         - name: JAVA_OPTS
-          value: \"-XX:+UseParallelGC -XX:ActiveProcessorCount=1 -XX:MaxRAMPercentage=75 -XX:TieredStopAtLevel=1\"
+          value: "-XX:+UseParallelGC -XX:ActiveProcessorCount=1 -XX:MaxRAMPercentage=75 -XX:TieredStopAtLevel=1"
         - name: PUBLIC_IP
           value: localhost:8080
         - name: STATESTORE_NAME
           value: kvstore
-        - name: OPENAI_API_KEY
-          value: \"$OPENAI_API_KEY\"
         - name: DAPR_GRPC_ENDPOINT
           value: http://localhost:50001
         - name: DAPR_HTTP_ENDPOINT
           value: http://localhost:3500
+        - name: OPENAI_API_KEY
+          value: <YOUR OPENAI_API_KEY HERE>
         livenessProbe:
           httpGet:
             path: /actuator/health
@@ -234,11 +234,11 @@ spec:
             port: 8080
         resources:
           limits:
-            cpu: \"1\"
-            memory: \"2Gi\"
+            cpu: "1"
+            memory: "2Gi"
           requests:
-            cpu: \"1\"
-            memory: \"2Gi\"
+            cpu: "1"
+            memory: "2Gi"
         ports:
         - containerPort: 8080
 " | kubectl apply --filename -
@@ -290,13 +290,13 @@ echo '
 apiVersion: dapr.io/v1alpha1
 kind: Subscription
 metadata:
-  name: pizza-store-subscription
+  name: pizza-store-subscritpion
 spec:
   topic: topic
   route: /events
   pubsubname: pubsub
 scopes: 
-- pizza-store  
+- pizza-store
 ' | kubectl apply --filename -
 
 kubectl port-forward svc/pizza-store 8080:80
